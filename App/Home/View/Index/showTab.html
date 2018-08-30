@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>广元协和医院新媒体</title>
+    <link rel="stylesheet" href="{$staticPath}/layui/css/layui.css">
+    <style media="screen">
+        .over{width:100px; overflow:hidden;}
+    </style>
+</head>
+<body>
+    <div class="layui-card layui-anim layui-anim-up">
+      <div class="layui-card-header table" table="{$table}">{$tableFont} - 预约列表</div>
+      <div class="layui-card-body">
+        统计数据:<br>
+        总共: {$dataCount} 条&nbsp;&nbsp;&nbsp;已到: {$arrival}&nbsp;&nbsp;&nbsp;未到: {$notArrival}
+      </div>
+    </div>
+    <table class="layui-table layui-anim layui-anim-up" style="table-layout: fixed;" lay-size="sm">
+      <thead>
+        <tr>
+          <th>姓名</th>
+          <th>性别</th>
+          <th>年龄</th>
+          <th>电话</th>
+          <th>QQ</th>
+          <th>专家号</th>
+          <th>咨询内容</th>
+          <th>预约时间</th>
+          <th>病患类型</th>
+          <th>媒体来源</th>
+          <th>地区</th>
+          <th>备注</th>
+          <th>客服</th>
+          <th>回访</th>
+          <th>赴约情况</th>
+          <th>添加时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+          <foreach name="data" item="vo" key="k">
+              <tr class="rowData" Index="{$vo['id']}">
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['name']}</td>
+                  <td>{$vo['sex']}</td>
+                  <td>{$vo['old']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['phone']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['qq']}</td>
+                  <td>{$vo['expert']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['desc1']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['oldDate']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['diseases']}</td>
+                  <td>{$vo['fromAddress']}</td>
+                  <td>{$vo['switch']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['desc2']}</td>
+                  <td>{$vo['custService']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['newDate']}</td>
+                  <td>{$vo['status']}</td>
+                  <td style="white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{$vo['currentTime']}</td>
+                  <td>
+                      <a href="javascript:;" title="查看详情" class="layui-icon layui-icon-form more" style="color:#1E9FFF;"></a>
+                      <a href="javascript:;" title="更改内容" class="layui-icon layui-icon-edit update" style="color:#FFB800;"></a>
+                      <a href="javascript:;" title="删除此行" class="layui-icon layui-icon-delete delete" style="color:#FF5722;"></a>
+                  </td>
+              </tr>
+          </foreach>
+      </tbody>
+    </table>
+
+    <!-- <div class="layui-container"> -->
+        <div class="layui-row layui-anim layui-anim-up">
+            <div class="layui-col-md8">&nbsp;</div>
+            <div class="layui-btn-group layui-col-md4">
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">{$home? $home : "首页"}</i>
+                </button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">{$prev? $prev : "上一页"}</i>
+                </button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">{$next? $next : "下一页"}</i>
+                </button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">{$last_page? $last_page : "尾页"}</i>
+                </button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">第{$pageIndex}/{$total_pages}页</i>
+                </button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">每页{$pageSize}条</i>
+                </button>
+                <button class="layui-btn layui-btn-xs layui-btn-primary">
+                    <i class="layui-icon">共{$dataCount}条</i>
+                </button>
+            </div>
+        </div>
+    <!-- </div> -->
+    <div class="pageIndex" style="display:none;">{$pageIndex}</div>
+</body>
+<script src="{$staticPath}/layui/layui.js"></script>
+</html>
