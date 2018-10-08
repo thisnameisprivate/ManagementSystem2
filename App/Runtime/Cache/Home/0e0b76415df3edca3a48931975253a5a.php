@@ -90,18 +90,18 @@
                     }
                 },
                 data:[
-                    {value:<?php echo ($result[0]); ?>, name:'其他'},
-                    {value:<?php echo ($result[1]); ?>, name:'阴虱、疥疮'},
-                    {value:<?php echo ($result[2]); ?>, name:'男科性病'},
-                    {value:<?php echo ($result[3]); ?>, name:'尿道炎'},
-                    {value:<?php echo ($result[4]); ?>, name:'精液异常'},
-                    {value:<?php echo ($result[5]); ?>, name:'射精障碍'},
-                    {value:<?php echo ($result[6]); ?>, name:'阳痿'},
-                    {value:<?php echo ($result[7]); ?>, name:'早泄'},
-                    {value:<?php echo ($result[8]); ?>, name:'前列腺炎'},
-                    {value:<?php echo ($result[9]); ?>, name:'包皮包茎'},
-                    {value:<?php echo ($result[10]); ?>, name:'包皮龟头炎'},
-                    {value:<?php echo ($result[11]); ?>, name:'7月活动'}
+                    {value:<?php echo ($result['其他']); ?>, name:'其他'},
+                    {value:<?php echo ($result['阴虱、疥疮']); ?>, name:'阴虱、疥疮'},
+                    {value:<?php echo ($result['男科性病']); ?>, name:'男科性病'},
+                    {value:<?php echo ($result['尿道炎']); ?>, name:'尿道炎'},
+                    {value:<?php echo ($result['精液异常']); ?>, name:'精液异常'},
+                    {value:<?php echo ($result['射精障碍']); ?>, name:'射精障碍'},
+                    {value:<?php echo ($result['阳痿']); ?>, name:'阳痿'},
+                    {value:<?php echo ($result['早泄']); ?>, name:'早泄'},
+                    {value:<?php echo ($result['前列腺炎']); ?>, name:'前列腺炎'},
+                    {value:<?php echo ($result['包皮包茎']); ?>, name:'包皮包茎'},
+                    {value:<?php echo ($result['包皮龟头炎']); ?>, name:'包皮龟头炎'},
+                    {value:<?php echo ($result['7月活动']); ?>, name:'7月活动'}
                 ]
             }
         ]

@@ -121,7 +121,6 @@ class CurdController extends Controller {
         /* 查询id对应的病种表单 */
         $diseases = $user->table("alldiseases")->where("pid = $pid")->field("diseases")->select();
 
-        /* 遍历数据替换数组中的数字发送到前端 */
         $cookieVal = cookie('username');
         $cookieModStat = $user->table('user')->field('modstat')->where("username='{$cookieVal}'")->select();
         if ($cookieModStat[0]['modstat'] == 1) {
@@ -129,6 +128,8 @@ class CurdController extends Controller {
         } else {
             $checked = true;
         }
+
+        /* 遍历数据替换数组中的数字发送到前端 */
         for ($i = 0; $i < count($data); $i ++) {
 
             /* 查询id对应的表单 */
@@ -247,7 +248,7 @@ class CurdController extends Controller {
                 $this->assign('result', $result);
                 break;
             case 5:
-                $this->assign('item', '广元协和医院内科 网络部 客服预约情况');
+                $this->assign('item', '广元协和医院计划生育科 网络部 客服预约情况');
                 $result = $this->checkCountData('jhsy');
                 $this->assign('result', $result);
                 break;
@@ -264,21 +265,6 @@ class CurdController extends Controller {
             case 8:
                 $this->assign('item', '广元协和医院乳腺科 网络部 客服预约情况');
                 $result= $this->checkCountData('rxk');
-                $this->assign('result', $result);
-                break;
-            case 9:
-                $this->assign('item', '广元协和医院疼痛科 网络部 客服预约情况');
-                $result= $this->checkCountData('ttk');
-                $this->assign('result', $result);
-                break;
-            case 10:
-                $this->assign('item', '广元协和医院肝病科 网络部 客服预约情况');
-                $result= $this->checkCountData('gbk');
-                $this->assign('result', $result);
-                break;
-            case 11:
-                $this->assign('item', '广元协和医院胃肠科 网络部 客服预约情况');
-                $result= $this->checkCountData('wck');
                 $this->assign('result', $result);
                 break;
             default:

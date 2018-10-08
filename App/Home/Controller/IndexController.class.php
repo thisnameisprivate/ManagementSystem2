@@ -50,9 +50,16 @@ class IndexController extends Controller {
                 $this->display();
 
             } else {
+                // 错误的Cookie,跳转到登录页login
+//                $this->error("错误的Cookie", U("Home/Index/login"), 1);
+//                $this->U("Home/Index/login");
                 $this->display('login');
             }
+
         } else {
+            // 跳转至登录页面
+//            $this->error("请先登录", U("Home/Index/login"), 1);
+//            $this->U("Home/Index/login");
             $this->display('login');
         }
     }
@@ -162,7 +169,7 @@ class IndexController extends Controller {
                 $yesterUserSortArrival = $this->yesterUserSortArrival('jhsy', $nameList);
                 $yesterUserSortRese = $this->yesterUserSortRese('jhsy', $nameList);
                 $checkCountRese = $this->checkCountRese('jhsy');
-                $this->assign('item', '/ 广元协和医院内科');
+                $this->assign('item', '/ 广元协和医院计划生育科');
                 break;
             case 6:
                 $result = $this->checkCountData('gck');
@@ -193,36 +200,6 @@ class IndexController extends Controller {
                 $yesterUserSortRese = $this->yesterUserSortRese('rxk', $nameList);
                 $checkCountRese = $this->checkCountRese('rxk');
                 $this->assign('item', '/ 广元协和医院乳腺科');
-                break;
-            case 9:
-                $result = $this->checkCountData('ttk');
-                $nameList = $this->checkCountMonth('ttk');
-                $userSort = $this->currUserSort('ttk', $nameList);
-                $currUserSortRese = $this->currUserSortRese('ttk', $nameList);
-                $yesterUserSortArrival = $this->yesterUserSortArrival('ttk', $nameList);
-                $yesterUserSortRese = $this->yesterUserSortRese('ttk', $nameList);
-                $checkCountRese = $this->checkCountRese('ttk');
-                $this->assign('item', '/ 广元协和医院疼痛科');
-                break;
-            case 10:
-                $result = $this->checkCountData('gbk');
-                $nameList = $this->checkCountMonth('gbk');
-                $userSort = $this->currUserSort('gbk', $nameList);
-                $currUserSortRese = $this->currUserSortRese('gbk', $nameList);
-                $yesterUserSortArrival = $this->yesterUserSortArrival('gbk', $nameList);
-                $yesterUserSortRese = $this->yesterUserSortRese('gbk', $nameList);
-                $checkCountRese = $this->checkCountRese('gbk');
-                $this->assign('item', '/ 广元协和医院微肝病科');
-                break;
-            case 11:
-                $result = $this->checkCountData('wck');
-                $nameList = $this->checkCountMonth('wck');
-                $userSort = $this->currUserSort('wck', $nameList);
-                $currUserSortRese = $this->currUserSortRese('wck', $nameList);
-                $yesterUserSortArrival = $this->yesterUserSortArrival('wck', $nameList);
-                $yesterUserSortRese = $this->yesterUserSortRese('wck', $nameList);
-                $checkCountRese = $this->checkCountRese('wck');
-                $this->assign('item', '/ 广元协和医院胃肠科');
                 break;
             default:
                 $this->assign('item', '/ 未选择医院');
@@ -402,7 +379,7 @@ class IndexController extends Controller {
             case 5:
                 $user = M('jhsy');
                 $this->assign('table', 'jhsy');
-                $this->assign('tableFont', '广元协和医院内科');
+                $this->assign('tableFont', '广元协和医院计划生育');
                 break;
             case 6:
                 $user = M('gck');
@@ -419,39 +396,115 @@ class IndexController extends Controller {
                 $this->assign('table', 'rxk');
                 $this->assign('tableFont', '广元协和医院乳腺科');
                 break;
-            case 9:
-                $user = M('ttk');
-                $this->assign('table', 'ttk');
-                $this->assign('tableFont', '广元协和医院疼痛科');
-                break;
-            case 10:
-                $user = M('gbk');
-                $this->assign('table', 'gbk');
-                $this->assign('tableFont', '广元协和医院肝病科');
-                break;
-            case 11:
-                $user = M('wck');
-                $this->assign('table', 'wck');
-                $this->assign('tableFont', '广元协和医院胃肠科');
-                break;
             default:
                 echo "找不到表格,可能是表格id未找到";
                 break;
         }
-        /* 查询已到和未到 */
-        $arrival = $user->where("status = 1")->count('id');
-        $notArrival = $user->where("status != 1")->count('id');
-
+        // 2018/10/8 Update. add select where ...
+        if (! is_null($_GET['iden'])) {
+            if ($_GET['iden'] == 1) {
+                $data = $user->where("TO_DAYS(oldDate) - TO_DAYS(NOW()) = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("TO_DAYS(oldDate) - TO_DAYS(NOW()) = 1 and status = 1")->count('id');
+                $notArrival = $user->where("TO_DAYS(oldDate) - TO_DAYS(NOW()) = 1 and status != 1")->count('id');
+                $dataCount = $user->where("TO_DAYS(oldDate) - TO_DAYS(NOW()) = 1")->count();
+            } else if ($_GET['iden'] == 2) {
+                $data = $user->where("to_days(oldDate) = to_days(now())")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("to_days(oldDate) = to_days(now()) and status = 1")->count('id');
+                $notArrival = $user->where("to_days(oldDate) = to_days(now()) and status != 1")->count('id');
+                $dataCount = $user->where("to_days(oldDate) = to_days(now())")->count();
+            } else if ($_GET['iden'] == 3) {
+                $data = $user->where("to_days(oldDate) = to_days(now()) AND status = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("to_days(oldDate) = to_days(now()) and status = 1")->count('id');
+                $notArrival = 0;
+                $dataCount = $user->where("to_days(oldDate) = to_days(now()) AND status = 1")->count();
+            } else if ($_GET['iden'] == 4) {
+                $data = $user->where("to_days(oldDate) = to_days(now()) AND status != 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = $user->where("to_days(oldDate) = to_days(now()) and status != 1")->count('id');
+                $arrival = 0;
+                $dataCount = $user->where("to_days(oldDate) = to_days(now())")->count();
+            } else if ($_GET['iden'] == 5) {
+                $data = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 and status = 1")->count('id');
+                $notArrival = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 and status != 1")->count('id');
+                $dataCount = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1")->count();
+            } else if ($_GET['iden'] == 6) {
+                $data = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 AND status = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 and status = 1")->count('id');
+                $notArrival = 0;
+                $dataCount = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 AND status = 1")->count();
+            } else if ($_GET['iden'] == 7) {
+                $data = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 AND status != 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = 0;
+                $notArrival = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 and status != 1")->count('id');
+                $dataCount = $user->where("to_days(NOW()) - TO_DAYS(oldDate) = 1 AND status = 1")->count();
+            } else if ($_GET['iden'] == 8) {
+                $data = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and status = 1")->count('id');
+                $notArrival = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and status != 1")->count('id');
+                $dataCount = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')")->count();
+            } else if ($_GET['iden'] == 9) {
+                $data = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') AND status = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and status = 1")->count('id');
+                $notArrival = 0;
+                $dataCount = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and status = 1")->count();
+            } else if ($_GET['iden'] == 10) {
+                $data = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') AND status != 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and status != 1")->count('id');
+                $arrival = 0;
+                $dataCount = $user->where("DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') and status != 1")->count();
+            } else if ($_GET['iden'] == 11) {
+                $data = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1 and status = 1")->count('id');
+                $notArrival = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1 and status != 1")->count('id');
+                $dataCount = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1")->count();
+            } else if ($_GET['iden'] == 12) {
+                $data = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(oldDate, '%Y%m')) = 1 AND status = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $arrival = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1 and status = 1")->count('id');
+                $notArrival = 0;
+                $dataCount = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1")->count();
+            } else if ($_GET['iden'] == 13) {
+                $data = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(), '%Y%m'), DATE_FORMAT(oldDate, '%Y%m')) = 1 AND status != 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1 and status != 1")->count('id');
+                $arrival = 0;
+                $dataCount = $user->where("PERIOD_DIFF(DATE_FORMAT(NOW(),'%Y%m'), DATE_FORMAT(oldDate,'%Y%m')) = 1")->count();
+            } else if ($_GET['iden'] == 14) {
+                $data = $user->where("status = 3 AND to_days(oldDate) - to_days(now()) = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = 0;
+                $arrival = 0;
+                $dataCount = $user->where("status = 3 AND to_days(oldDate) - to_days(now()) = 1")->count();
+            } else if ($_GET['iden'] == 15) {
+                $data = $user->where("status = 3 AND to_days(oldDate) = to_days(now())")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = 0;
+                $arrival = 0;
+                $dataCount = $user->where("status = 3 AND to_days(oldDate) = to_days(now())")->count();
+            } else if ($_GET['iden'] == 16) {
+                $data = $user->where("status = 3 AND to_days(now()) - to_days(oldDate) = 1")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = 0;
+                $arrival = 0;
+                $dataCount = $user->where("status = 3 AND to_days(now()) - to_days(oldDate) = 1")->count();
+            } else if ($_GET['iden'] == 17) {
+                $data = $user->where("status = 3 AND DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = 0;
+                $arrival = 0;
+                $dataCount = $user->where("status = 3 AND DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')")->count();
+            } else if ($_GET['iden'] == 18) {
+                $data = $user->where("status = 3 AND DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')")->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+                $notArrival = 0;
+                $arrival = 0;
+                $dataCount = $user->where("status = 3 AND DATE_FORMAT(oldDate, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')")->count();
+            }
+            // 2018/10/8 Update End.
+        } else {
+            $data = $user->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
+            /* 查询已到和未到 */
+            $arrival = $user->where("status = 1")->count('id');
+            $notArrival = $user->where("status != 1")->count('id');
+            /* 计算显示总条数等 */
+            $dataCount = $user->count("id");
+        }
         /* 分页查询详情表数据 */
         $pageSize = 50;
-        $data = $user->limit(($pageIndex - 1) * $pageSize, $pageSize)->order('id desc')->select();
-
-
-        /* 计算显示总条数等 */
-        $dataCount = $user->count("id");
         $total_pages = ceil($dataCount/$pageSize);
-
-
         /* 读取分页配置信息 */
         /* PAGE_SELF => 'http://localhost/ThinkPHP/index.php/Home/Index/showTab' config 定义 */
         $pagePath = C(PAGE_SELF);
@@ -539,14 +592,13 @@ class IndexController extends Controller {
         $address = $user->table('fromaddress')->select();
 
         $cookieName = cookie('username');
-        $modifystatus = $user->table('user')->field('modstat')->where("username='{$cookieName}'")->select();
-        if ($modifystatus[0]['modstat'] == 0) {
+        $cookieStatus = $user->table('user')->field('modstat')->where("username='{$cookieName}'")->select();
+        if ($cookieStatus[0]['modstat'] == 0) {
             $status = $user->table('member')->select();
         } else {
             // 查询状态下拉列表
             $status = $user->table('status')->select();
         }
-
 
         // 把字段发送到前端
         $this->assign('diseases', $diseases);
@@ -571,7 +623,7 @@ class IndexController extends Controller {
                 $this->assign('item', '广元协和医院其他预约信息添加');
                 break;
             case 5:
-                $this->assign('item', '广元协和医院内科预约信息添加');
+                $this->assign('item', '广元协和医院计划生育科预约信息添加');
                 break;
             case 6:
                 $this->assign('item', '广元协和医院肛肠科预约信息添加');
@@ -581,15 +633,6 @@ class IndexController extends Controller {
                 break;
             case 8:
                 $this->assign('item', '广元协和医院乳腺科预约信息添加');
-                break;
-            case 9:
-                $this->assign('item', '广元协和医院疼痛科预约信息添加');
-                break;
-            case 10:
-                $this->assign('item', '广元协和医院肝病科预约信息添加');
-                break;
-            case 11:
-                $this->assign('item', '广元协和医院胃肠科预约信息添加');
                 break;
             default:
                 $this->assign('item', '未选择医院');
@@ -669,7 +712,7 @@ class IndexController extends Controller {
             case 5:
 
                 $this->assign('table', 'jhsy');
-                $this->assign('tableFont', '广元协和医院内科');
+                $this->assign('tableFont', '广元协和医院计划生育');
                 break;
 
             case 6:
@@ -688,24 +731,6 @@ class IndexController extends Controller {
 
                 $this->assign('table', 'rxk');
                 $this->assign('tableFont', '广元协和医院乳腺科');
-                break;
-
-            case 9:
-
-                $this->assign('table', 'ttk');
-                $this->assign('tableFont', '广元协和医院疼痛科');
-                break;
-
-            case 10:
-
-                $this->assign('table', 'gbk');
-                $this->assign('tableFont', '广元协和医院肝病科');
-                break;
-
-            case 11:
-
-                $this->assign('table', 'wck');
-                $this->assign('tableFont', '广元协和医院胃肠科');
                 break;
 
             default:
@@ -1188,7 +1213,6 @@ class IndexController extends Controller {
                     $userData['log'][$i] = 0;
                 }
             }
-
         }
 
         if ($userData['modstat'] != null) {
@@ -1441,12 +1465,6 @@ class IndexController extends Controller {
                 return 'wcwk';
             case 8:
                 return 'rxk';
-            case 9:
-                return 'ttk';
-            case 10:
-                return 'gbk';
-            case 11:
-                return 'wck';
             default:
                 echo "找不到表格,可能是表格id未找到";
                 break;
@@ -1484,7 +1502,7 @@ class IndexController extends Controller {
     {
         $Model = new \Think\Model();
         $arrival = array();
-        $diseasesList = array('nk', 'fk', 'byby', 'other', 'jhsy', 'gck', 'wcwk', 'rxk', 'ttk', 'gbk', 'wck');
+        $diseasesList = array('nk', 'fk', 'byby', 'other', 'jhsy', 'gck', 'wcwk', 'rxk');
         for ($i = 0; $i < count($diseasesList); $i ++) {
             $currArrival[$diseasesList[$i]] = $Model->query("SELECT COUNT(*) AS count FROM $diseasesList[$i] WHERE status = 1 AND date_format(currentTime, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
             $oneArrival[$diseasesList[$i]] = $this->monthSelect(1, 1, $diseasesList[$i]);
@@ -1734,19 +1752,13 @@ class IndexController extends Controller {
             case 4:
                 return '广元协和医院其他';
             case 5:
-                return '广元协和医院内科';
+                return '广元协和医院计划生育';
             case 6:
                 return '广元协和医院肛肠科';
             case 7:
                 return '广元协和医院微创外科';
             case 8:
                 return '广元协和医院乳腺科';
-            case 9:
-                return '广元协和医院疼痛科';
-            case 10:
-                return '广元协和医院肝病科';
-            case 11:
-                return '广元协和医院胃肠科';
             default:
                 echo "找不到表格,可能是表格id未找到";
                 break;
@@ -2385,7 +2397,7 @@ class IndexController extends Controller {
         for ($i = 0; $i < count($diseasesSort); $i ++) {
             foreach ($Model->query("SELECT COUNT(*) AS {$diseasesSort[$i]} FROM {$tableName} WHERE diseases = {$i}") AS $key => $val) {
                 foreach ($val as $k) {
-                    $result[$i] = $k;
+                    $result[$diseasesSort[$i]] = $k;
                 }
             }
         }
@@ -2395,6 +2407,7 @@ class IndexController extends Controller {
 
     /*
      *  errorLog
+     *  return $this->display();
      * */
     public function errorlog ()
     {

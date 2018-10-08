@@ -132,7 +132,7 @@
     <div class="layui-card">
         <div class="layui-form-item">
             <label class="layui-form-label">添加/修改时状态</label>
-            <input type="checkbox" name="modstat" title="状态" <?php echo ($result[0]['modstat']==1?checked:""); ?>>
+            <input type="checkbox" name="modstat" title="添加/修改时状态" <?php echo ($result[0]['modstat']==1?checked:""); ?>>
         </div>
     </div>
     <div class="layui-form-item">
